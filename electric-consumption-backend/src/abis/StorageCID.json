@@ -1,0 +1,20 @@
+[
+  {
+    "inputs": [
+      { "internalType": "string", "name": "_cid", "type": "string" }
+    ],
+    "name": "setCID",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCID",
+    "outputs": [
+      { "internalType": "string", "name": "", "type": "string" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
