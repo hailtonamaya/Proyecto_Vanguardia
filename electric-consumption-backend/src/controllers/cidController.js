@@ -5,6 +5,8 @@ const fs = require('fs');
 exports.uploadAndSave = async (req, res) => {
   try {
     const file = req.file;
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
     if (!file) return res.status(400).json({ error: 'No file uploaded' });
 
     const result = await pinataService.pinFileToIPFS(file.path, file.originalname);
