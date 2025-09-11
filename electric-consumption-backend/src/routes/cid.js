@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const controller = require('../controllers/cidController');
@@ -11,11 +10,25 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// configurar multer
-const upload = multer({ dest: uploadDir });
-
 // subir archivo a Pinata y guardar CID en contrato
-router.post('/upload', upload.single('file'), controller.uploadAndSave);
+router.post('/upload-historial', (req, res) => {
+  try {
+    const filePath = path.join(__dirname, '../uploads/historial.json');
+
+    // Simular req.file como si Multer lo hubiera recibido
+    const simulatedReq = {
+      file: {
+        path: filePath,
+        originalname: 'historial.json'
+      }
+    };
+
+    controller.uploadAndSave(simulatedReq, res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // guardar CID directamente (sin archivo)
 router.post('/', controller.setCID);

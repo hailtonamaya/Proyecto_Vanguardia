@@ -1,27 +1,66 @@
 const pinataService = require('../services/pinataService');
 const contractService = require('../services/contractService');
 const fs = require('fs');
+const path = require('path');
 
 exports.uploadAndSave = async (req, res) => {
   try {
-    const file = req.file;
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+    // Aceptar archivo subido por Multer o archivo existente
+    const file = req.file || req.body.filePath; 
+    let filePath, originalname;
 
-    const result = await pinataService.pinFileToIPFS(file.path, file.originalname);
-    fs.unlinkSync(file.path);
+    console.log('Inicio de uploadAndSave');
+    console.log('Archivo recibido (file):', file); // log del objeto completo
 
-    // guardar el CID en blockchain
-    const tx = await contractService.setCID(result.IpfsHash);
-    await tx.wait();
+    if (file?.path && file?.originalname) {
+      // Caso Multer (archivo subido desde frontend)
+      filePath = file.path;
+      originalname = file.originalname;
+    } else if (typeof file === 'string') {
+      // Caso archivo existente en el servidor
+      filePath = file;
+      originalname = require('path').basename(file);
+    } else {
+      return res.status(400).json({ error: 'No file provided' });
+    }
 
-    res.json({ cid: result.IpfsHash, txHash: tx.hash });
+    console.log('Archivo final a subir:', filePath);
+
+    // Subir a Pinata
+    let result;
+    try {
+      result = await pinataService.pinFileToIPFS(filePath, originalname);
+      console.log('Archivo subido a Pinata, hash:', result.IpfsHash);
+    } catch (err) {
+      console.error('Error subiendo a Pinata:', err);
+      return res.status(500).json({ error: 'Error subiendo a Pinata', details: err.message });
+    }
+
+
+    // Solo eliminar si fue un archivo subido temporalmente por Multer
+    //if (req.file) require('fs').unlinkSync(filePath);
+
+    // Guardar el CID en blockchain
+    let tx;
+    try {
+      tx = await contractService.setCID(result.IpfsHash);
+      console.log('Tx enviada, hash:', tx.hash);
+    } catch (err) {
+      console.error('Error enviando tx a blockchain:', err);
+      return res.status(500).json({ error: 'Error en blockchain', details: err.message });
+    }
+
+    res.json({
+      cid: result.IpfsHash,
+      txHash: tx.hash,
+      notice: 'Tx enviada, puede tardar en confirmarse'
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.setCID = async (req, res) => {
   try {
