@@ -1,4 +1,18 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import Guardados from "./pages/Guardados";
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/guardados" element={<Guardados />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+/*import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -23,3 +37,4 @@ function App() {
 }
 
 export default App;
+*/
