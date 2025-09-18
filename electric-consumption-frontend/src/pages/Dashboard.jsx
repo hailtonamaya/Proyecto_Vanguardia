@@ -75,7 +75,7 @@ export default function Dashboard() {
         {
           label: 'Consumo',
           data: last7.map(entry => entry.kwConvertidos),
-          backgroundColor: 'cyan',
+          backgroundColor: '#ee8e34ff',
         },
       ],
     };
@@ -98,10 +98,10 @@ export default function Dashboard() {
       {/* Gráficas lado a lado */}
       <CustomSplitter
         style={{
-          margin: '20px 0',
+          margin: 'auto',
           padding: '10px',
           minHeight: 300,
-          height: '400px',
+          height: 'auto',
         }}
         firstPanelContent={
           <div style={{ flex: 1, padding: '0 20px' }}>

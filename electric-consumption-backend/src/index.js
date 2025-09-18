@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const cidRouter = require('./routes/cid');
+const historialRouter = require('./routes/historial');
 const { fetchArduinoData } = require('./services/arduinoService');
 
 // Ejecutar la función de lectura cada segundos
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use('/api/cid', cidRouter);
-
+app.use('/api/historial', historialRouter);
 app.get('/', (req, res) => res.send('StorageCID backend running'));
 
 const PORT = process.env.PORT || 3000;

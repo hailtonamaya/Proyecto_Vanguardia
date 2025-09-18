@@ -30,7 +30,7 @@ router.post('/upload-historial', (req, res) => {
   }
 });
 
-router.get('/obtener-historial', controller.getHistorial);
+
 
 // guardar CID directamente (sin archivo)
 router.post('/', controller.setCID);
