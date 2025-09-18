@@ -15,4 +15,11 @@ async function pinJSONToIPFS(json) {
   return await pinata.pinJSONToIPFS(json);
 }
 
-module.exports = { pinFileToIPFS, pinJSONToIPFS };
+async function getJSONFromIPFS(cid) {
+  const url = `https://gateway.pinata.cloud/ipfs/${cid}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Failed to fetch from IPFS');
+  return await response.json();
+}
+
+module.exports = { pinFileToIPFS, pinJSONToIPFS, getJSONFromIPFS };

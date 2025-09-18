@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import MainLayout from "../components/MainLayout";
 
-// Asegúrate de que chart.js esté configurado globalmente (igual que en Dashboard)
+// No importamos MainLayout aquí, se envuelve desde el router
 export default function Guardados() {
   const [labels, setLabels] = useState([]);
   const [valores, setValores] = useState([]);
@@ -14,7 +13,7 @@ export default function Guardados() {
         const data = await res.json();
         const lecturas = data.lecturas;
 
-        // agrupar por fecha y mostrar la primera fecha por defecto
+        // Agrupar por fecha y tomar la primera fecha
         const fechasUnicas = [...new Set(lecturas.map((l) => l.fecha))];
         if (fechasUnicas.length > 0) {
           const datos = lecturas.filter((l) => l.fecha === fechasUnicas[0]);
@@ -56,11 +55,9 @@ export default function Guardados() {
   );
 
   return (
-    <MainLayout>
-      <div className="p-6">
-        <h5 className="mb-4">Lecturas guardadas</h5>
-        <Line data={data} options={options} />
-      </div>
-    </MainLayout>
+    <div className="p-6">
+      <h5 className="mb-4">Lecturas guardadas</h5>
+      <Line data={data} options={options} />
+    </div>
   );
 }

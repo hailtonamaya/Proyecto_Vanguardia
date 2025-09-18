@@ -3,6 +3,7 @@ const contractService = require('../services/contractService');
 const fs = require('fs');
 const path = require('path');
 
+
 exports.uploadAndSave = async (req, res) => {
   try {
     // Aceptar archivo subido por Multer o archivo existente
@@ -81,6 +82,18 @@ exports.getCID = async (req, res) => {
   try {
     const cid = await contractService.getCID();
     res.json({ cid });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getHistorial = async (req, res) => {
+  try {
+    const cid = await contractService.getCID();
+    if (!cid) return res.status(404).json({ error: 'No CID found in blockchain' });
+    const json = await pinataService.getJSONFromIPFS(cid);
+    res.json(json);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

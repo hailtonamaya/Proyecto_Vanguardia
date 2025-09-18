@@ -7,7 +7,7 @@ const cidRouter = require('./routes/cid');
 const { fetchArduinoData } = require('./services/arduinoService');
 
 // Ejecutar la función de lectura cada segundos
-setInterval(fetchArduinoData, 5 * 1000);
+// setInterval(fetchArduinoData, 5 * 1000);
 
 const app = express();
 app.use(cors());
