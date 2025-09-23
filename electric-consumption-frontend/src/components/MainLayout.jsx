@@ -3,14 +3,14 @@ import { HistorialProvider } from '../context/HistorialContext';
 import { Layout, Menu, Button, theme, Alert, Image,Typography, Flex, Radio} from 'antd';
 import {
   BarChartOutlined,
+  ContainerOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SaveOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Footer } from 'antd/es/layout/layout';
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -87,23 +87,9 @@ const MainLayout = ({ children }) => {
             items={[
               { key: '/', icon: <BarChartOutlined />, label: <Link to="/">Dashboard</Link> },
               { key: '/guardados', icon: <SaveOutlined />, label: <Link to="/guardados">Guardados</Link> },
-              { key: '/transacciones', icon: <UserOutlined />, label: <Link to="/transacciones">Transacciones</Link> },
+              { key: '/transacciones', icon: <ContainerOutlined />, label: <Link to="/transacciones">Transacciones</Link> },
             ]}
           />
-          <div
-            style={{
-              padding: "12px",
-              borderTop: "1px solid #303030",
-              textAlign: "center",
-            }}
-          >
-            <br />
-            <Text style={{ fontSize: "12px", color: "#bbb" }}>
-              <Link to={`https://amoy.polygonscan.com/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
-                Ver Contrato en Polygonscan
-              </Link>
-            </Text>
-          </div>
         </Sider>
         <Layout>
           <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -143,7 +129,15 @@ const MainLayout = ({ children }) => {
           >
             {children}
           </Content>
-          
+          <Footer style={{ textAlign: 'center' }}>
+              <Text type="secondary">Sistema de Monitoreo Energético ©2025 Desarrollado por Bilander Fernandez, Hailton Amaya y Hector Caceres</Text>
+              <br />              
+              <Text type="secondary">
+                <Link to={`https://amoy.polygonscan.com/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
+                  Ver Contrato en Polygonscan
+                </Link>
+              </Text>
+          </Footer>          
         </Layout>
       </Layout>
     </HistorialProvider>
