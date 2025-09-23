@@ -5,10 +5,11 @@ const morgan = require('morgan');
 
 const cidRouter = require('./routes/cid');
 const historialRouter = require('./routes/historial');
+const contractRouter = require('./routes/contract');
 const { fetchArduinoData } = require('./services/arduinoService');
 
 // Ejecutar la función de lectura cada segundos
-// setInterval(fetchArduinoData, 5 * 1000);
+//setInterval(fetchArduinoData, 5 * 1000);
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use('/api/cid', cidRouter);
+app.use('/api/contract', contractRouter);
 app.use('/api/historial', historialRouter);
 app.get('/', (req, res) => res.send('StorageCID backend running'));
 

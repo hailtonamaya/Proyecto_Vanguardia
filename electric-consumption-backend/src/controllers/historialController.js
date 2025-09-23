@@ -6,6 +6,7 @@ const path = require('path');
 exports.getBlockchainHistorial = async (req, res) => {
   try {
     const cid = await contractService.getCID();
+    console.log('Retrieved CID from blockchain:', cid);
     if (!cid) return res.status(404).json({ error: 'No CID found in blockchain' });
     const json = await pinataService.getJSONFromIPFS(cid);
     res.json(json);

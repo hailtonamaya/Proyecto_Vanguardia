@@ -23,13 +23,10 @@ const plainOptions = [
 
 
 const MainLayout = ({ children }) => {
-  const [txhash, setTxhash] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [readingAlert, setReadingAlert ] = useState(false);
   const [selectedSource, setSelectedSource] = useState("blockchain");
-  const [uploadAlertSuccess, setUploadAlertSuccess] = useState(false);
-  const [uploadAlertError, setUploadAlertError] = useState(false);
   const [historial, setHistorial] = useState([]);
   const location = useLocation();
   const {
@@ -58,7 +55,6 @@ const MainLayout = ({ children }) => {
       const res = await axios.get(endpoint);
       setHistorial(res.data);
 
-      // Mostrar alerta al actualizar
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
     } catch (err) {
@@ -70,25 +66,6 @@ const MainLayout = ({ children }) => {
     const interval = setInterval(fetchHistorial, 10000);
     return () => clearInterval(interval);
   }, [selectedSource]); 
-
-  const handleSubirHistorial = async () => {
-    try {
-      // Aquí mandas el historial al backend
-      const res = await axios.post(
-        "http://localhost:3001/api/cid/upload-historial" 
-      );
-      if(res.data.txHash){
-        setTxhash(res.data.txHash);
-        setUploadAlertSuccess(true);
-      }
-      console.log("Respuesta del servidor:", res.data);
-    } catch (err) {
-      setUploadAlertError(true);
-      setTimeout(() => setUploadAlertError(false), 5000);
-      console.error("Error al subir historial:", err);
-    }
-  };
-
 
   return (
     <HistorialProvider historial={historial}>
@@ -110,6 +87,7 @@ const MainLayout = ({ children }) => {
             items={[
               { key: '/', icon: <BarChartOutlined />, label: <Link to="/">Dashboard</Link> },
               { key: '/guardados', icon: <SaveOutlined />, label: <Link to="/guardados">Guardados</Link> },
+              { key: '/transacciones', icon: <UserOutlined />, label: <Link to="/transacciones">Transacciones</Link> },
             ]}
           />
           <div
@@ -119,13 +97,11 @@ const MainLayout = ({ children }) => {
               textAlign: "center",
             }}
           >
-            <Text style={{ fontSize: "12px", color: "#bbb" }}>Contrato:</Text>
             <br />
-            <Text
-              style={{ fontSize: "12px", color: "#bbb" }}
-              copyable={{ text: contractAddress }}
-            >
-              {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}
+            <Text style={{ fontSize: "12px", color: "#bbb" }}>
+              <Link to={`https://amoy.polygonscan.com/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
+                Ver Contrato en Polygonscan
+              </Link>
             </Text>
           </div>
         </Sider>
@@ -166,30 +142,6 @@ const MainLayout = ({ children }) => {
             }}
           >
             {children}
-            <Flex vertical gap="small" style={{ width: '100%' }}>
-              <br/>
-              <Button type="primary" block onClick={handleSubirHistorial}>
-                Subir Historial a Blockchain
-              </Button>
-              <br />
-              {uploadAlertSuccess && (
-                <Alert
-                  type="success"
-                  showIcon
-                  closable
-                  message={
-                    <>
-                      Historial subido a Blockchain, su Transaction Hash es:{" "}
-                      <Text copyable={{ text: txhash }} style={{ fontWeight: 500 }}>
-                        {txhash}
-                      </Text>
-                    </>
-                  }
-                  onClose={() => setUploadAlertSuccess(false)} 
-                />
-              )}
-              {uploadAlertError && (<Alert message="Error subiendo historial" type="error" showIcon />)}
-            </Flex>
           </Content>
           
         </Layout>
